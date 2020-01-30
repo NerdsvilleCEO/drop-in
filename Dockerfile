@@ -1,11 +1,9 @@
-FROM jare/vim-bundle
+FROM omnidapps/nvim:alpine
 
-MAINTAINER JAremko <w3techplaygound@gmail.com>
+LABEL maintainer="Josh Santos <josh@omnidapps.com>"
 
 USER root
-
 COPY sshd_config /etc/ssh/sshd_config
-COPY init-vim.sh /tmp/init-vim.sh
 COPY tmux.conf $UHOME/.tmux.conf
 
 RUN echo "http://nl.alpinelinux.org/alpine/edge/testing" \
@@ -21,20 +19,17 @@ RUN echo "http://nl.alpinelinux.org/alpine/edge/testing" \
     mosh-server \
     openrc \
     openssh \
+    openssh-server-pam \
     tmux \
-    py2-pip \
-    && git clone https://github.com/tmux-plugins/tmux-yank.git \
-    $UHOME/.tmux/tmux-yank \
-    && pip install powerline-status \
-    && echo "set shell=/bin/bash" \
-    >> $UHOME/.vimrc~ \
-    && sh /tmp/init-vim.sh
+    py2-pip
 
 RUN rc-update add sshd \
     && rc-status \
     && touch /run/openrc/softlevel \
     && /etc/init.d/sshd start > /dev/null 2>&1 \
-    && /etc/init.d/sshd stop > /dev/null 2>&1
+    && /etc/init.d/sshd stop > /dev/null 2>&1 \
+    && rm /etc/ssh/ssh_host_*key* \
+    && ssh-keygen -A
 
 #              ssh   mosh
 EXPOSE 80 8080 62222 60001/udp

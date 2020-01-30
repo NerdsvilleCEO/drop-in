@@ -3,7 +3,6 @@ Port 62222
 
 Protocol 2
 AllowTcpForwarding yes
-RSAAuthentication yes
 AuthorizedKeysFile /etc/ssh_keys
 #SyslogFacility AUTHPRIV
 ChallengeResponseAuthentication no
@@ -26,8 +25,7 @@ StrictModes yes
 #Subsystem	sftp	/usr/libexec/openssh/sftp-server
 TCPKeepAlive no
 UseDNS yes
-UseLogin no
-UsePrivilegeSeparation yes
+UsePAM yes
 X11DisplayOffset 10
 X11Forwarding yes
 X11UseLocalhost yes
